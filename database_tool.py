@@ -9,7 +9,7 @@ currentDatabase = ''
 databases = []
 textboxColour = 'linen'
 
-def dbTableFormatdbTableFormat(info, body):
+def dbTableFormat(info, body):
     columnWidths = []
     headings = []
     
@@ -199,13 +199,13 @@ def runSql(sql):
 window = Tk()
 window.title('Python Database Tool')
 
-updateDatabases()
 pythonLogo = PhotoImage(file='python-logo.gif')
 sqliteLogo = PhotoImage(file='sqlite-logo.gif')
 
-if not os.path.exists("databases"):
+if not os.path.isdir("databases"):
     os.makedirs("databases")
-    
+
+updateDatabases()    
 os.chdir('databases')
 
 frameNewDb = Frame(window)

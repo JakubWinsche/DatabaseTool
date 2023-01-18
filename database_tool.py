@@ -202,6 +202,10 @@ window.title('Python Database Tool')
 updateDatabases()
 pythonLogo = PhotoImage(file='python-logo.gif')
 sqliteLogo = PhotoImage(file='sqlite-logo.gif')
+
+if not os.path.exists("databases"):
+    os.makedirs("databases")
+    
 os.chdir('databases')
 
 frameNewDb = Frame(window)

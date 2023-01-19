@@ -4,6 +4,7 @@ from tkinter.scrolledtext import *
 import sqlite3
 import os
 import ctypes
+from tkinter import simpledialog
 
 currentDatabase = ''
 databases = []
@@ -178,6 +179,7 @@ def runQuery():
     else:
         query = sqlTextbox.get(0.0, END)
         runSql(query)
+        outputTextbox.insert(END, 'Successfully ran the command.\n\n')
 
 def runSql(sql):
     with sqlite3.connect(currentDatabase) as db:
@@ -194,6 +196,17 @@ def runSql(sql):
             
         result = result + '\n\n'
         outputTextbox.insert(END, result)
+
+def listItems():
+    root = tkinter.Tk()
+
+    try:
+        root.withdraw()
+        userInp = simpledialog.askstring(title = 'Test', prompt = 'What item do you want to view from:')
+        runSql(f'''SELECT * FROM {userInp}''')
+
+    except:
+        outputTextbox.insert(END, f'There is no such table as {userInp}')
    
 # ----------------------------------------------------------------- Main Code -----------------------------------------------------------------
 window = Tk()
@@ -238,9 +251,11 @@ Label(window, image=pythonLogo).grid(row = 1, column = 0, sticky = NW)
 Label(window, image=sqliteLogo).grid(row = 1, column = 1, sticky = NW)
 
 buttonQuit = Button(frameButtons, text = "Quit", width = 10, command = quitTool)
-buttonQuit.grid(row = 0, column = 3, sticky = NE)
+buttonQuit.grid(row = 0, column = 4, sticky = NE)
 buttonHelp = Button(frameButtons, text = "Help", width = 10, command = help)
-buttonHelp.grid(row = 0, column = 2, sticky = NE)
+buttonHelp.grid(row = 0, column = 3, sticky = NE)
+buttonList = Button(frameButtons, text = "List items", width = 15, command = listItems)
+buttonList.grid(row = 0, column = 2, sticky = NE)
 buttonClear = Button(frameOutput, text = "Clear result box", command = clearOutput)
 buttonClear.grid(row = 2, column = 0, sticky = NE)
 buttonRun = Button(frameQuery, text = "Run SQL", width = 10, command = runQuery)
@@ -254,6 +269,7 @@ var = StringVar()
 var.set('Choose database:')
 dbDropdown = OptionMenu(frameButtons, var, *databases if databases else ['empty'], command = chooseDatabase)
 dbDropdown.grid(row = 0, column = 0, sticky = NW)
+
 
 # Run mainloop
 window.mainloop()
